@@ -4,9 +4,10 @@ const {Server} = require('socket.io')
 const cors = require('cors')
 const app = express();
 const route = require("./route");
-const { User } = require('./Users');
+const { User } = require('./User');
 const { URLS } = require('./URLS');
 const { Colors } = require('./Colors');
+const { Users } = require('./users');
 
 
 app.use(cors({origin: "*"}));
@@ -14,10 +15,8 @@ app.use(route)
 
 
 
-editorValue=''
-let users = []
-let cursors = []
-
+let editorValue=''
+const users=new Users()
 const server = http.createServer(app);
 
 const io = new Server(server,{
@@ -28,43 +27,37 @@ const io = new Server(server,{
 })
 
 io.on(URLS.connection, (socket)=>{
-	console.log("connect")
+	console.log("connection established")
 	socket.on(URLS.join,()=>{
-		const newUser = new User
-		users.push(newUser)
-		cursors.push({
-			id:newUser.id, 
-			name:newUser.name,
-			color:Colors[String(users.length)],
-			X:0,
-			Y:0
-		})
+		const newUser = new User(socket.id)
+		newUser.color=Colors[users.users.length],
+		users.add(newUser)
 		socket.join(newUser.room);
 		socket.emit(URLS.auth, {
-				id:newUser.id,
-				name:newUser.name,
-				room:newUser.room
+		id:newUser.id,
+		name:newUser.name,
+		room:newUser.room,
+		editorValue:editorValue
 		})
-		console.log(`${newUser.name} connect`)
+		console.log(`${newUser.id} connect`)
 	})
 	socket.on(URLS.clientValueСhanged,(params)=>{
 		editorValue = params.data
 		setTimeout(()=>{socket.broadcast.to(URLS.room).emit(URLS.serverValue,editorValue)},10)
-		
 	})
 	socket.on(URLS.positionCursorChange,(params)=>{
-		for(let cursor of cursors){
-			if(cursor.id===params.id){
-				cursor.X=params.X;
-				cursor.Y=params.Y;
+		for(let user of users.users){
+			if(user.id===params.id){
+				user.cursorX=params.X;
+				user.cursorY=params.Y;
 			}
 		}
-		// console.log(URLS.room)
-		socket.broadcast.to(URLS.room).emit(URLS.serverCursors,cursors)
-		
+		socket.broadcast.to(URLS.room).emit(URLS.serverCursors, users.users)	
 	})
 	socket.on(URLS.disconnect,()=>{
-		console.log(`disconnect`)
+		users.set(users.users.filter(user=>user.id!=socket.id))
+		socket.broadcast.to(URLS.room).emit(URLS.clientDisconnect, users.users)	
+		console.log(`${newUser.id} disconnect`)
 	})
 })
 
