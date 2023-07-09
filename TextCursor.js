@@ -1,6 +1,5 @@
 class TextCursor {
 	constructor(id){
-		//this.name = Names[Math.floor(Math.random() * 16)]
 		this.startRow = 0
 		this.startCol = 0
 		this.endRow = 0

@@ -3,7 +3,6 @@ const http = require('http')
 const {Server} = require('socket.io')
 const cors = require('cors')
 const app = express();
-const route = require("./route");
 const { User } = require('./User');
 const { URLS } = require('./URLS');
 const { Colors, ColorsTextCursors } = require('./Colors');
@@ -11,10 +10,7 @@ const { Users } = require('./users');
 const { TextCursor } = require('./TextCursor');
 const { TextCursors } = require('./TextCursors');
 
-
 app.use(cors({origin: "*"}));
-app.use(route)
-
 
 
 let editorValue=''

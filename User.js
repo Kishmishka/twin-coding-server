@@ -1,4 +1,3 @@
-const { Colors } = require("./Colors");
 const { Names } = require("./Names");
 const { URLS } = require("./URLS");
 
