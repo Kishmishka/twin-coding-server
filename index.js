@@ -42,9 +42,10 @@ io.on(URLS.connection, (socket)=>{
 		id:newUser.id,
 		name:newUser.name,
 		room:newUser.room,
+		color:newUser.color,
 		editorValue:editorValue
 		})
-		console.log(`${newUser.id}connect`)
+		console.log(`${newUser.id} connect`)
 	})
 	socket.on(URLS.clientValueСhanged,(params)=>{
 		editorValue = params.data
