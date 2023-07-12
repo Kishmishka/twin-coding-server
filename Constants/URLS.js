@@ -12,6 +12,8 @@ const URLS = {
 	serverCursors:'serverCursors',
 	clientDisconnect:'clientDisconnect',
 	positionTextCursorChange:'positionTextCursorChange',
-	serverTextCursors:'serverTextCursors'
+	serverTextCursors:'serverTextCursors',
+	languageChange:'languageChange',
+	serverLanguage:'serverLanguage',
 }
 exports.URLS = URLS

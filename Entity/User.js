@@ -1,5 +1,5 @@
-const { Names } = require("./Names");
-const { URLS } = require("./URLS");
+const { Names } = require("../Constants/Names");
+const { URLS } = require("../Constants/URLS");
 
 class User {
 	constructor(socket){
