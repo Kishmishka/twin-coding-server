@@ -36,6 +36,7 @@ io.on(URLS.connection, (socket)=>{
 		const newUser = new User(socket.id)
 		newUser.color = Colors[users.values.length]
 		users.add(newUser)
+
 		socket.join(newUser.room);
 		socket.emit(URLS.auth, {
 		id:newUser.id,
@@ -46,16 +47,19 @@ io.on(URLS.connection, (socket)=>{
 		language:languageValue.get(),
 		})
 		console.log(`${newUser.id} connect`)
+		console.log(`${newUser.name} connect`)
 	})
+
 	socket.on(URLS.clientValueСhanged,(params)=>{
 		editorValue.set(params.data)
 		setTimeout(()=>{socket.broadcast.to(URLS.room).emit(URLS.serverValue,editorValue.get())},10)
 	})
+
 	socket.on(URLS.languageChange,(language)=>{
 		languageValue.set(language)
-		
 		socket.broadcast.to(URLS.room).emit(URLS.serverLanguage,languageValue.get())
 	})
+
 	socket.on(URLS.positionCursorChange,(params)=>{
 		for(let user of users.values){
 			if(user.id===params.id){
@@ -65,6 +69,7 @@ io.on(URLS.connection, (socket)=>{
 		}
 		socket.broadcast.to(URLS.room).emit(URLS.serverCursors, users.values)	
 	})
+
 	socket.on(URLS.positionTextCursorChange,(params)=>{
 		for(let textCursor of textCursors.values){
 			if(textCursor.id===params.id){
@@ -77,6 +82,7 @@ io.on(URLS.connection, (socket)=>{
 		}
 		socket.broadcast.to(URLS.room).emit(URLS.serverTextCursors, textCursors.values)	
 	})
+	
 	socket.on(URLS.disconnect,()=>{
 		users.set(users.values.filter(user=>user.id!==socket.id))
 		textCursors.set(textCursors.values.filter(textCursor=>textCursor.id!==socket.id))
